@@ -18,7 +18,11 @@ from src.routes.upload import upload_bp
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 
 # Configuration
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'asdf#FGSgvasgf$5$WGT')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+
+# Ensure SECRET_KEY is set
+if not app.config['SECRET_KEY']:
+    raise ValueError("SECRET_KEY environment variable not set. Please set it for session security.")
 
 # Enable CORS for all routes
 CORS(app, origins=["*"], supports_credentials=True)
@@ -70,3 +74,14 @@ def serve(path):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=os.environ.get('FLASK_ENV') == 'development')
+
+
+# Session configuration
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_FILE_DIR"] = "/tmp/flask_session"
+
+from flask_session import Session
+Session(app)
+
+

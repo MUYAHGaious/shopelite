@@ -6,3 +6,5 @@ Werkzeug==3.0.1
 gunicorn==21.2.0
 Pillow==10.4.0
 psycopg2-binary
+Flask-Session==0.8.0
+
