@@ -10,7 +10,7 @@ const ImageUpload = ({ onImageUpload, currentImage, disabled = false }) => {
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
 
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
   const handleDrag = (e) => {
     e.preventDefault();
