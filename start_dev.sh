@@ -1,13 +1,11 @@
 #!/bin/bash
 
-# EliteShop Development Startup Script
-
 echo "🚀 Starting EliteShop Development Environment..."
 
 # Check if virtual environment exists
 if [ ! -d "venv" ]; then
     echo "📦 Creating virtual environment..."
-    python -m venv venv
+    python3 -m venv venv
 fi
 
 # Activate virtual environment
@@ -17,14 +15,15 @@ source venv/bin/activate
 # Install backend dependencies
 echo "📥 Installing backend dependencies..."
 pip install -r requirements.txt
+pip install python-dotenv Flask-Session
 
 # Set development environment variables
 export FLASK_ENV=development
 export SECRET_KEY=dev-secret-key
 
-# Start backend in background
+# Start backend
 echo "🔥 Starting Flask backend..."
-python src/main.py &
+python3 src/main.py &
 BACKEND_PID=$!
 
 # Wait for backend to start
@@ -41,7 +40,7 @@ fi
 
 # Create .env file if it doesn't exist
 if [ ! -f ".env" ]; then
-    echo "VITE_API_URL=http://localhost:5000/api" > .env
+    echo "VITE_API_BASE_URL=/api" > .env
     echo "✅ Created frontend .env file"
 fi
 
@@ -57,21 +56,14 @@ echo "📍 Backend:  http://localhost:5000"
 echo "📍 Frontend: http://localhost:5173"
 echo "📍 Admin:    http://localhost:5173/admin"
 echo ""
-echo "Press Ctrl+C to stop all services"
+echo "Press any key to stop all services..."
+read -n 1 -s
 
-# Function to cleanup on exit
-cleanup() {
-    echo ""
-    echo "🛑 Stopping services..."
-    kill $BACKEND_PID 2>/dev/null
-    kill $FRONTEND_PID 2>/dev/null
-    echo "✅ All services stopped"
-    exit 0
-}
+# Cleanup
+echo ""
+echo "🛑 Stopping services..."
+kill $BACKEND_PID
+kill $FRONTEND_PID
+echo "✅ All services stopped"
 
-# Set trap to cleanup on script exit
-trap cleanup SIGINT SIGTERM
-
-# Wait for user to stop
-wait
 
