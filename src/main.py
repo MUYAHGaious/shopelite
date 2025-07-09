@@ -1,6 +1,10 @@
 import os
 import sys
-# DON'T CHANGE THIS !!!
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# DON\'T CHANGE THIS !!!
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from flask import Flask, send_from_directory
@@ -25,7 +29,7 @@ if not app.config['SECRET_KEY']:
     raise ValueError("SECRET_KEY environment variable not set. Please set it for session security.")
 
 # Enable CORS for all routes
-CORS(app, origins=["*"], supports_credentials=True)
+CORS(app, origins=["*"] , supports_credentials=True)
 
 # Register blueprints
 app.register_blueprint(user_bp, url_prefix='/api')
@@ -78,8 +82,9 @@ if __name__ == '__main__':
 
 # Session configuration
 app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-app.config["SESSION_FILE_DIR"] = "/tmp/flask_session"
+app.config["SESSION_TYPE"] = "sqlalchemy"
+app.config["SESSION_SQLALCHEMY"] = db
+app.config["SESSION_SQLALCHEMY_TABLE"] = "flask_sessions"
 
 from flask_session import Session
 Session(app)
