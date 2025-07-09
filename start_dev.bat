@@ -3,13 +3,16 @@ chcp 65001 > nul
 
 echo Starting EliteShop Development Environment...
 
-REM Create virtual environment if it doesn\'t exist
-if not exist venv\Scripts\activate.bat (
-    echo Creating virtual environment...
-    python -m venv venv
-)
+REM Navigate to the directory where the script is located
+cd /d "%~dp0"
 
-REM Use the Python and Pip from the virtual environment directly
+REM Force remove existing virtual environment to prevent path conflicts
+if exist venv rmdir /s /q venv
+
+echo Creating virtual environment...
+python -m venv venv
+
+REM Define paths to venv executables
 set PYTHON_VENV=venv\Scripts\python.exe
 set PIP_VENV=venv\Scripts\pip.exe
 
@@ -20,7 +23,7 @@ echo Installing backend dependencies...
 REM Set development environment variables
 set FLASK_ENV=development
 
-REM Create .env file if it doesn\'t exist
+REM Create .env file if it doesn't exist
 if not exist .env (
     echo SECRET_KEY=your_local_secret_key_here > .env
     echo FLASK_ENV=development >> .env
@@ -43,7 +46,7 @@ if not exist node_modules (
     npm install
 )
 
-REM Create .env file for frontend if it doesn\'t exist
+REM Create .env file for frontend if it doesn't exist
 if not exist .env (
     echo VITE_API_BASE_URL=/api > .env
     echo Created frontend .env file.
@@ -69,3 +72,5 @@ echo Stopping services...
 taskkill /F /IM python.exe 2>nul
 taskkill /F /IM node.exe 2>nul
 echo All services stopped
+
+
