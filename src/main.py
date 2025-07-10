@@ -90,3 +90,10 @@ from flask_session import Session
 Session(app)
 
 
+
+
+# Session cookie settings for production
+app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+
+
