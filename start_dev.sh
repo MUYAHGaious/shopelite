@@ -38,7 +38,7 @@ if [ ! -d "node_modules" ]; then
     npm install
 fi
 
-# Create .env file if it doesn't exist
+# Create .env file if it doesn\"t exist
 if [ ! -f ".env" ]; then
     echo "VITE_API_BASE_URL=/api" > .env
     echo "✅ Created frontend .env file"
@@ -65,5 +65,3 @@ echo "🛑 Stopping services..."
 kill $BACKEND_PID
 kill $FRONTEND_PID
 echo "✅ All services stopped"
-
-

@@ -3,27 +3,25 @@ chcp 65001 > nul
 
 echo Starting EliteShop Development Environment...
 
-REM Navigate to the directory where the script is located
-cd /d "%~dp0"
+REM Create virtual environment if it doesn\"t exist
+if not exist venv\Scripts\activate.bat (
+    echo Creating virtual environment...
+    python -m venv venv
+)
 
-REM Force remove existing virtual environment to prevent path conflicts
-if exist venv rmdir /s /q venv
+REM Activate virtual environment
+echo Activating virtual environment...
+call venv\Scripts\activate.bat
 
-echo Creating virtual environment...
-python -m venv venv
-
-REM Define paths to venv executables
-set PYTHON_VENV=venv\Scripts\python.exe
-set PIP_VENV=venv\Scripts\pip.exe
-
+REM Install backend dependencies
 echo Installing backend dependencies...
-%PIP_VENV% install -r requirements.txt
-%PIP_VENV% install python-dotenv Flask-Session
+pip install -r requirements.txt
+pip install python-dotenv Flask-Session
 
 REM Set development environment variables
 set FLASK_ENV=development
 
-REM Create .env file if it doesn't exist
+REM Create .env file if it doesn\"t exist
 if not exist .env (
     echo SECRET_KEY=your_local_secret_key_here > .env
     echo FLASK_ENV=development >> .env
@@ -32,7 +30,7 @@ if not exist .env (
 
 REM Start Flask backend
 echo Starting Flask backend...
-start /B %PYTHON_VENV% src\main.py
+start /B python src\main.py
 
 REM Wait for backend to start
 timeout /t 5 /nobreak > nul
@@ -46,7 +44,7 @@ if not exist node_modules (
     npm install
 )
 
-REM Create .env file for frontend if it doesn't exist
+REM Create .env file for frontend if it doesn\"t exist
 if not exist .env (
     echo VITE_API_BASE_URL=/api > .env
     echo Created frontend .env file.
@@ -72,5 +70,3 @@ echo Stopping services...
 taskkill /F /IM python.exe 2>nul
 taskkill /F /IM node.exe 2>nul
 echo All services stopped
-
-
